@@ -65,5 +65,3 @@ PREG1n=melt(PREG1)
 names(PREG1n)=c("Var1","Var2")
 escala=seq(-1,1,0.1)
 (q<-ggplot(PREG1n ,aes(Var1,Var2, fill=Var1))+ theme (text = element_text(face="bold",size=16))+ geom_boxplot())
-
-
