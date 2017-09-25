@@ -18,6 +18,9 @@ library(corrgram)
 library(psych) 
 library(nortest)
 library(mvnormtest)
+library(beanplot)
+library(vioplot)
+library(lattice)
 
 ## Example: Evaluar el bajo peso de los recén nacidos
 #Lectura de la base de datos
@@ -44,7 +47,7 @@ ggplot(PREG3, aes(x=Td, y=BET, color=Y))+geom_point()
 qplot(Td,BET, data=PREG3, size=Y, colour=Y,  xlim = c(1.5,9), ylim = c(2, 9)) +
       theme (text = element_text(face="bold",size=16))
 
-#Gráficos de correlación
+#Gráficos de matrices de correlación
 correlacion=cor(PREG1)
 datos.lista<-melt(correlacion)
 names(datos.lista)=c("Variable_1","Variable_2","Correlacion")
@@ -54,6 +57,16 @@ escala=seq(-1,1,0.1)
     labs(title="Analisis de correlaciones",plot.title=element_text(face="bold",size=18)))
     
 corrplot(correlacion,  method="circle")
+corrplot(correlacion, method = "square")
+corrplot(correlacion, method = "ellipse")
+corrplot(correlacion, method = "number")
+corrplot(correlacion, method = "shade")
+corrplot(correlacion, method = "color")
+corrplot(correlacion, method = "pie")
+corrplot(correlacion, type = "upper")
+corrplot(correlacion, type = "lower")
+corrplot.mixed(correlacion)
+corrplot.mixed(correlacion, lower = "ellipse", upper = "circle")
 
 corrgram(PREG1,lower.panel=panel.cor,upper.panel=panel.pie, cor.method = "pearson")
 corrgram(PREG1,lower.panel=panel.cor,upper.panel=panel.conf, cor.method = "pearson")
@@ -65,3 +78,13 @@ PREG1n=melt(PREG1)
 names(PREG1n)=c("Var1","Var2")
 escala=seq(-1,1,0.1)
 (q<-ggplot(PREG1n ,aes(Var1,Var2, fill=Var1))+ theme (text = element_text(face="bold",size=16))+ geom_boxplot())
+
+beanplot(Precio~Barrio,col = "lightgray")
+
+vioplot(Precio[Barrio=='Este'],Precio[Barrio=='Norte'],Precio[Barrio=='Oeste'],
+col="tomato")
+
+bwplot(sex ~ CW | sp, data = crabs, layout = c(1, 2))
+
+bwplot(esp ~ val | caract, data = cangrejos, layout = c(1, 5))
+
