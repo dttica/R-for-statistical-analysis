@@ -1,0 +1,69 @@
+################################################################################
+
+# Unidad 1: Análisis descriptivo
+# Nombre : Diana Carolina Ttica Huanca
+# email: dianac.tticah@gmail.com
+# Script Version : 1.0
+
+################################################################################
+
+library(lmtest)
+library(zoo)
+library(nortest)
+library(ggplot2)
+library(corrplot)
+library(car)
+library(reshape)
+library(corrgram)
+library(psych) 
+library(nortest)
+library(mvnormtest)
+
+## Example: Evaluar el bajo peso de los recén nacidos
+#Lectura de la base de datos
+PREG1=read.csv("PREG1.csv",header = T, sep=";")
+str(PREG1)
+#Creando una nueva variable "IMC" a partir del Peso y Talla
+Tallam=(PREG1$tallam)/100
+IMCm=vector(mode='numeric', length = nrow(PREG1))
+PREG1=data.frame(PREG1,IMCm=round(PREG1$pesom/(Tallam)^2,2))
+
+##Analisis descriptivo y exploratorio
+summary(PREG1)
+
+scatterplotMatrix(PREG1 , diagonal = "hist")
+scatterplotMatrix(PREG1 , diagonal = "density")
+scatterplotMatrix(PREG1 , diagonal = "boxplot") #valores atípicos
+scatterplotMatrix(PREG1 , diagonal = "qqplot")  #se aproximan a una dist. normal
+
+pairs.panels(PREG1, pch=21,main="Matriz de Dispersión, Histograma y Correlación")
+
+#Gráficos de dispersión
+ggplot(PREG3, aes(x=Td, y=BET, color=Y))+geom_point()
+
+qplot(Td,BET, data=PREG3, size=Y, colour=Y,  xlim = c(1.5,9), ylim = c(2, 9)) +
+      theme (text = element_text(face="bold",size=16))
+
+#Gráficos de correlación
+correlacion=cor(PREG1)
+datos.lista<-melt(correlacion)
+names(datos.lista)=c("Variable_1","Variable_2","Correlacion")
+escala=seq(-1,1,0.1)
+(p<-ggplot(datos.lista,aes(Variable_1,Variable_2,fill=Correlacion))+geom_tile(aes(fill=Correlacion))+
+    theme (text = element_text(face="bold",size=16)) + scale_fill_continuous(low="white",high="#ff3300",breaks=escala)+
+    labs(title="Analisis de correlaciones",plot.title=element_text(face="bold",size=18)))
+    
+corrplot(correlacion,  method="circle")
+
+corrgram(PREG1,lower.panel=panel.cor,upper.panel=panel.pie, cor.method = "pearson")
+corrgram(PREG1,lower.panel=panel.cor,upper.panel=panel.conf, cor.method = "pearson")
+corrgram(PREG1,lower.panel=panel.cor,upper.panel=panel.ellipse, cor.method = "pearson")
+corrgram(PREG1,lower.panel=panel.cor,upper.panel=panel.shade, cor.method = "pearson")
+    
+#Gráficos de cajas
+PREG1n=melt(PREG1)
+names(PREG1n)=c("Var1","Var2")
+escala=seq(-1,1,0.1)
+(q<-ggplot(PREG1n ,aes(Var1,Var2, fill=Var1))+ theme (text = element_text(face="bold",size=16))+ geom_boxplot())
+
+
